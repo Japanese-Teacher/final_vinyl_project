@@ -1,6 +1,7 @@
-def main():
-    print("Hello from final-vinyl-project!")
+from fastapi import FastAPI
+
+from app.transport.vinyl import vinyl_router
 
 
-if __name__ == "__main__":
-    main()
+app = FastAPI()
+app.include_router(vinyl_router)

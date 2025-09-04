@@ -1,7 +1,8 @@
 from pydantic import BaseModel
 
-class VynilDTO(BaseModel):
-    id: int
+class VinylDTO(BaseModel):
     album_name: str
     artist: str
     producer: str
+    cost: int
+    description: str | None
