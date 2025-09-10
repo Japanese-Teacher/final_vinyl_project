@@ -6,6 +6,7 @@ class EnvSettings(
     env_file=".env",
 ):
     postgres_dsn: str
+    test_postgres_dsn: str
 
     class Config:
         env_file = ".env"

@@ -6,3 +6,6 @@ class VinylDTO(BaseModel):
     producer: str
     cost: int
     description: str | None
+
+class VinylResponse(VinylDTO):
+    id: int
