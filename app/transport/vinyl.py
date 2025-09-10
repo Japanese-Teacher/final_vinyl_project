@@ -2,40 +2,40 @@ from typing import Annotated
 
 from fastapi import APIRouter, Depends
 
-from app.models import VinylDTO
+from app.models import VinylDTO, VinylResponse
 from app.services.vinyl_service import VinylService
 
 vinyl_router = APIRouter(
-    prefix='/vinyl',
-    tags=["Vinyl"]
+    prefix='/vinyls',
+    tags=["Vinyls"]
 )
 
 
-@vinyl_router.post('', response_model=VinylDTO)
+@vinyl_router.post('', response_model=VinylResponse)
 async def add_vinyl(
         vinyl: VinylDTO,
         vinyl_service: Annotated[VinylService, Depends(VinylService)],
-) -> VinylDTO:
+) -> VinylResponse:
     return await vinyl_service.add_vinyl(vinyl)
 
 
-@vinyl_router.get('', response_model=VinylDTO)
+@vinyl_router.get('/{vinyl_id}', response_model=VinylResponse)
 async def get_vinyl_by_id(
         vinyl_id: int,
         vinyl_service: Annotated[VinylService, Depends(VinylService)],
-) -> VinylDTO:
+) -> VinylResponse:
     return await vinyl_service.get_vinyl_by_id(vinyl_id)
 
 
-@vinyl_router.put('', response_model=VinylDTO)
+@vinyl_router.put('/{vinyl_id}', response_model=VinylResponse)
 async def update_vinyl(
         vinyl_id: int,
         new_vinyl: VinylDTO,
         vinyl_service: Annotated[VinylService, Depends(VinylService)],
-) -> VinylDTO:
+) -> VinylResponse:
     return await vinyl_service.update_vinyl(vinyl_id, new_vinyl)
 
-@vinyl_router.delete('', response_model=str)
+@vinyl_router.delete('/{vinyl_id}', response_model=str)
 async def delete_vinyl(
         vinyl_id: int,
         vinyl_service: Annotated[VinylService, Depends(VinylService)],
