@@ -1,4 +1,4 @@
-from typing import Annotated
+from typing import Annotated, Optional
 
 from fastapi import APIRouter, Depends
 
@@ -27,6 +27,15 @@ async def get_vinyl_by_id(
     return await vinyl_service.get_vinyl_by_id(vinyl_id)
 
 
+@vinyl_router.get('', response_model=Optional[list[VinylResponse]])
+async def get_all_vinyl(
+        page: int,
+        size: int,
+        vinyl_service: Annotated[VinylService, Depends(VinylService)],
+) -> Optional[list[VinylResponse]]:
+    return await vinyl_service.get_all_vinyl(page, size)
+
+
 @vinyl_router.put('/{vinyl_id}', response_model=VinylResponse)
 async def update_vinyl(
         vinyl_id: int,
@@ -34,6 +43,7 @@ async def update_vinyl(
         vinyl_service: Annotated[VinylService, Depends(VinylService)],
 ) -> VinylResponse:
     return await vinyl_service.update_vinyl(vinyl_id, new_vinyl)
+
 
 @vinyl_router.delete('/{vinyl_id}', response_model=str)
 async def delete_vinyl(
