@@ -1,4 +1,4 @@
-from typing import Annotated
+from typing import Annotated, Optional
 
 from fastapi import Depends, HTTPException, status
 from sqlalchemy import select, delete
@@ -8,6 +8,9 @@ from app.models import VinylDTO, VinylResponse
 from app.orm import VinylORM
 from app.transport.depends.db import get_async_session
 
+def paginate(query, page, size):
+    offset_val = (page - 1) * size
+    return query.offset(offset_val).limit(size)
 
 class VinylRepository:
     def __init__(
@@ -76,6 +79,25 @@ class VinylRepository:
             description=vinyl_orm.description,
         )
         return vinyl_dto
+
+    async def get_all_vinyl(
+            self,
+            page: int,
+            size: int,
+    ) -> Optional[list[VinylResponse]]:
+        query = select(VinylORM)
+        paginated_query = paginate(query, page, size)
+        vinyls_orm = await self.async_session.execute(paginated_query)
+        return [VinylResponse(
+            id=vinyl_orm.id,
+            album_name=vinyl_orm.album_name,
+            artist=vinyl_orm.artist,
+            producer=vinyl_orm.producer,
+            cost=vinyl_orm.cost,
+            description=vinyl_orm.description,
+        )
+            for vinyl_orm in vinyls_orm.scalars().all()
+        ]
 
     async def update_vinyl(
             self,
